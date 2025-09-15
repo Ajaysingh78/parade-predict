@@ -9,12 +9,10 @@ import {
   Thermometer, 
   Droplets,
   MapPin,
-  Calendar,
-  Clock,
-  Zap,
   Star,
   Github,
-  ExternalLink
+  ExternalLink,
+  Zap
 } from 'lucide-react';
 import CircularProgress from '@/components/CircularProgress';
 import WeatherRiskCard from '@/components/WeatherRiskCard';
@@ -73,21 +71,21 @@ const Index = () => {
       title: 'Wind Risk',
       risk: demoMode ? (demoMode === 'challenging' ? 60 : 25) : 30,
       description: 'Wind speed & gust analysis',
-      details: 'Moderate wind conditions expected. Consider securing lightweight decorations and equipment. Wind may provide natural cooling but could affect outdoor displays.'
+      details: 'Moderate wind conditions expected. Consider securing lightweight decorations and equipment.'
     },
     {
       icon: CloudRain,
       title: 'Rain Risk',
       risk: demoMode ? (demoMode === 'monsoon' ? 90 : demoMode === 'challenging' ? 70 : 10) : 25,
       description: 'Precipitation probability',
-      details: 'Light rain possible in the evening. Have backup indoor options ready or consider waterproof arrangements for your event.'
+      details: 'Light rain possible. Have backup indoor options ready or consider waterproof arrangements for your event.'
     },
     {
       icon: Droplets,
       title: 'Discomfort Index',
       risk: demoMode ? (demoMode === 'challenging' ? 80 : demoMode === 'perfect' ? 20 : 55) : 40,
       description: 'Combined humidity & temperature',
-      details: 'Moderate discomfort expected due to humidity levels. Ensure good ventilation and consider cooling arrangements for guest comfort.'
+      details: 'Moderate discomfort expected due to humidity levels. Ensure good ventilation and cooling arrangements.'
     }
   ];
 
@@ -138,7 +136,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image with Overlay */}
@@ -148,71 +146,62 @@ const Index = () => {
             alt="Weather Background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 hero-gradient opacity-90"></div>
+          {/* Polished gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-background/90 via-background/70 to-background/90" />
+          {/* Animated subtle noise */}
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] opacity-10" />
         </div>
 
         {/* Demo Mode Toggle */}
-        <div className="absolute top-6 right-6 z-50 flex flex-col gap-2">
-          <div className="glass-premium rounded-xl p-4 space-y-2">
+        <div className="absolute top-6 right-6 z-50">
+          <div className="glass-premium rounded-2xl p-4 space-y-2 shadow-xl backdrop-blur-md">
             <div className="text-sm font-medium text-foreground mb-2">Demo Scenarios</div>
-            <Button
-              size="sm"
-              variant={demoMode === 'perfect' ? 'default' : 'outline'}
-              onClick={() => setDemoMode(demoMode === 'perfect' ? null : 'perfect')}
-              className="w-full justify-start text-xs"
-            >
-              Perfect Day
-            </Button>
-            <Button
-              size="sm"
-              variant={demoMode === 'challenging' ? 'default' : 'outline'}
-              onClick={() => setDemoMode(demoMode === 'challenging' ? null : 'challenging')}
-              className="w-full justify-start text-xs"
-            >
-              Challenging
-            </Button>
-            <Button
-              size="sm"
-              variant={demoMode === 'monsoon' ? 'default' : 'outline'}
-              onClick={() => setDemoMode(demoMode === 'monsoon' ? null : 'monsoon')}
-              className="w-full justify-start text-xs"
-            >
-              Monsoon
-            </Button>
+            {Object.keys(demoScenarios).map((key) => (
+              <Button
+                key={key}
+                size="sm"
+                variant={demoMode === key ? 'default' : 'outline'}
+                onClick={() => setDemoMode(demoMode === key ? null : key)}
+                className="w-full justify-start text-xs hover:scale-105 transition-transform"
+              >
+                {demoScenarios[key as keyof typeof demoScenarios].location}
+              </Button>
+            ))}
           </div>
         </div>
 
         {/* Floating Weather Icons */}
         <div className="absolute inset-0 pointer-events-none">
-          <Sun className="absolute top-1/4 left-1/4 w-12 h-12 text-secondary/30 animate-float" style={{ animationDelay: '0s' }} />
-          <Cloud className="absolute top-1/3 right-1/4 w-16 h-16 text-primary/40 animate-float" style={{ animationDelay: '2s' }} />
-          <CloudRain className="absolute bottom-1/3 left-1/3 w-10 h-10 text-tertiary/30 animate-float" style={{ animationDelay: '4s' }} />
+          <Sun className="absolute top-1/4 left-1/4 w-12 h-12 text-secondary/40 animate-float-glow" />
+          <Cloud className="absolute top-1/3 right-1/4 w-16 h-16 text-primary/40 animate-float-glow" />
+          <CloudRain className="absolute bottom-1/3 left-1/3 w-10 h-10 text-tertiary/40 animate-float-glow" />
         </div>
 
         {/* Main Content */}
         <div className="relative z-10 container mx-auto px-4 text-center">
           <div className="max-w-6xl mx-auto">
             {/* Hero Headlines */}
-            <div className="mb-12 animate-bounce-in">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-6">
-                <span className="gradient-text">Will It Rain On My Parade?</span>
+            <div className="mb-12 animate-fade-in">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-primary via-tertiary to-secondary bg-clip-text text-transparent">
+                  Will It Rain On My Parade?
+                </span>
               </h1>
-              <p className="text-xl md:text-2xl text-foreground/90 font-medium max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-3xl mx-auto">
                 AI-Powered Event Weather Intelligence for India
               </p>
               <p className="text-lg text-foreground/70 mt-4 max-w-2xl mx-auto">
-                Transform complex meteorological data into actionable event planning insights
+                Transform meteorological data into actionable event planning insights
               </p>
             </div>
 
             {/* Interactive Input Panel */}
-            <div className="glass-premium rounded-3xl p-8 md:p-12 mb-12 max-w-5xl mx-auto animate-scale-in">
+            <div className="glass-premium rounded-3xl p-8 md:p-12 mb-12 max-w-5xl mx-auto shadow-premium animate-scale-in">
               <div className="grid lg:grid-cols-2 gap-8 items-start">
                 {/* Left Column - Inputs */}
                 <div className="space-y-8">
-                  {/* Location Search */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-heading font-semibold text-foreground flex items-center gap-2">
+                    <h3 className="text-lg font-heading font-semibold flex items-center gap-2">
                       <MapPin className="w-5 h-5 text-primary" />
                       Event Location
                     </h3>
@@ -223,7 +212,6 @@ const Index = () => {
                     />
                   </div>
 
-                  {/* Date & Time Picker */}
                   <DateTimePicker
                     selectedDate={selectedDate}
                     selectedTime={selectedTime}
@@ -231,9 +219,8 @@ const Index = () => {
                     onTimeChange={setSelectedTime}
                   />
 
-                  {/* Event Profile Selector */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-heading font-semibold text-foreground flex items-center gap-2">
+                    <h3 className="text-lg font-heading font-semibold flex items-center gap-2">
                       <Star className="w-5 h-5 text-primary" />
                       Event Type
                     </h3>
@@ -243,10 +230,9 @@ const Index = () => {
                     />
                   </div>
 
-                  {/* CTA Button */}
                   <Button
                     onClick={handleCheckWeather}
-                    className="w-full btn-hero text-lg font-semibold py-6 rounded-2xl"
+                    className="w-full text-lg font-semibold py-6 rounded-2xl bg-gradient-to-r from-primary via-tertiary to-secondary hover:shadow-glow-primary transition-all"
                   >
                     <Zap className="w-5 h-5 mr-2" />
                     Check My Event Weather
@@ -256,17 +242,11 @@ const Index = () => {
                 {/* Right Column - Results */}
                 <div className="flex flex-col items-center justify-center min-h-[400px]">
                   {showResults ? (
-                    <div className="space-y-6 animate-scale-in">
-                      <CircularProgress
-                        score={comfortScore}
-                        animated={true}
-                      />
-                      
+                    <div className="space-y-6 animate-fade-in">
+                      <CircularProgress score={comfortScore} animated />
                       {location && (
                         <div className="text-center">
-                          <div className="text-2xl font-heading font-bold text-foreground mb-2">
-                            {location}
-                          </div>
+                          <div className="text-2xl font-heading font-bold mb-2">{location}</div>
                           <div className="text-muted-foreground">
                             {new Date(selectedDate).toLocaleDateString('en-IN', { 
                               weekday: 'long', 
@@ -297,10 +277,10 @@ const Index = () => {
 
       {/* Weather Risk Dashboard */}
       {showResults && (
-        <section className="py-20 bg-background/50 backdrop-blur-sm border-t border-border/50">
+        <section className="py-20 bg-background/60 backdrop-blur-sm border-t border-border/50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
                 Weather Risk Analysis
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -310,7 +290,7 @@ const Index = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto">
               {weatherRisks.map((risk, index) => (
-                <div key={risk.title} className="animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
+                <div key={risk.title} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                   <WeatherRiskCard {...risk} />
                 </div>
               ))}
@@ -319,10 +299,10 @@ const Index = () => {
         </section>
       )}
 
-      {/* Hackathon Info Footer */}
+      {/* Footer */}
       <footer className="py-12 border-t border-border/50">
         <div className="container mx-auto px-4">
-          <div className="glass-card rounded-2xl p-8">
+          <div className="glass-card rounded-2xl p-8 shadow-lg">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
               <div>
                 <div className="text-2xl font-bold text-primary">1,247</div>
@@ -347,11 +327,11 @@ const Index = () => {
                 Built for NASA Space Apps Challenge 2025 • Powered by OpenWeather & NASA POWER APIs
               </p>
               <div className="flex justify-center gap-4">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="hover:shadow-glow-primary">
                   <Github className="w-4 h-4 mr-2" />
                   View Source
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="hover:shadow-glow-secondary">
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Live Demo
                 </Button>
