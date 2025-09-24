@@ -19,7 +19,8 @@ import {
   User,
   LogIn,
   UserPlus,
-  LogOut
+  LogOut,
+  AlertCircle
 } from 'lucide-react';
 import CircularProgress from '@/components/CircularProgress';
 import WeatherRiskCard from '@/components/WeatherRiskCard';
@@ -27,6 +28,41 @@ import EventProfileSelector from '@/components/EventProfileSelector';
 import LocationSearchInput from '@/components/LocationSearchInput';
 import DateTimePicker from '@/components/DateTimePicker';
 import Background3D from "@/components/Background3D";
+
+// Time validation utility
+const isTimeSlotInPast = (selectedDate, timeSlot) => {
+  const today = new Date();
+  const selected = new Date(selectedDate);
+  
+  // If selected date is before today, it's definitely in the past
+  if (selected.toDateString() !== today.toDateString()) {
+    return selected < today;
+  }
+  
+  // If it's today, check the time slot
+  const currentHour = today.getHours();
+  
+  switch (timeSlot) {
+    case 'morning':
+      return currentHour >= 12; // Past morning if it's afternoon or evening
+    case 'afternoon':
+      return currentHour >= 18; // Past afternoon if it's evening
+    case 'evening':
+      return currentHour >= 23; // Past evening if it's late night
+    default:
+      return false;
+  }
+};
+
+// Time slot display utility
+const getTimeSlotDisplay = (timeSlot) => {
+  const slots = {
+    morning: '6:00 AM - 12:00 PM',
+    afternoon: '12:00 PM - 6:00 PM',
+    evening: '6:00 PM - 11:00 PM'
+  };
+  return slots[timeSlot] || timeSlot;
+};
 
 // Login Component
 const Login = ({ onLogin, onSwitchToSignup, onBack }) => {
@@ -244,6 +280,66 @@ const Signup = ({ onSignup, onSwitchToLogin, onBack }) => {
   );
 };
 
+// Time Validation Alert Modal
+const TimeValidationAlert = ({ isOpen, onClose, selectedDate, selectedTime }) => {
+  if (!isOpen) return null;
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-IN', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="glass-morphism rounded-2xl p-6 max-w-md w-full mx-4 bg-red-900/30 border border-red-400/50">
+        <div className="text-center space-y-4">
+          <div className="flex justify-center">
+            <AlertCircle className="w-16 h-16 text-red-400" />
+          </div>
+          
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-white">Time Slot Unavailable</h3>
+            <p className="text-red-200 text-sm">
+              The selected time slot has already passed and cannot be considered for weather analysis.
+            </p>
+          </div>
+
+          <div className="bg-red-500/20 rounded-lg p-4 border border-red-400/30">
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-red-200">Selected Date:</span>
+                <span className="text-white font-medium">{formatDate(selectedDate)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-red-200">Selected Time:</span>
+                <span className="text-white font-medium">{getTimeSlotDisplay(selectedTime)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-500/20 rounded-lg p-4 border border-blue-400/30">
+            <p className="text-blue-200 text-sm">
+              Please select a future time slot or a different date to proceed with the weather analysis.
+            </p>
+          </div>
+
+          <Button
+            onClick={onClose}
+            className="w-full py-3 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-400 hover:to-orange-400 text-white font-medium rounded-xl transition-all duration-300"
+          >
+            <AlertCircle className="w-4 h-4 mr-2" />
+            Understood
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Main App Component with Routing
 const Index = () => {
   const [currentPage, setCurrentPage] = useState('home'); // 'home', 'login', 'signup'
@@ -255,6 +351,7 @@ const Index = () => {
   const [comfortScore, setComfortScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [demoMode, setDemoMode] = useState(null);
+  const [showTimeAlert, setShowTimeAlert] = useState(false);
 
   // Demo scenarios
   const demoScenarios = {
@@ -274,6 +371,7 @@ const Index = () => {
       description: 'Monsoon Analysis - Tropical Storm Monitoring Required'
     }
   };
+  
 
   // Weather risks
   const weatherRisks = [
@@ -333,6 +431,12 @@ const Index = () => {
       return;
     }
 
+    // Validate time slot
+    if (isTimeSlotInPast(selectedDate, selectedTime)) {
+      setShowTimeAlert(true);
+      return;
+    }
+
     setShowResults(false);
     setTimeout(() => {
       const mockScore = Math.floor(Math.random() * 100);
@@ -381,6 +485,14 @@ const Index = () => {
   return (
     <div className="min-h-screen relative text-white overflow-x-hidden">
       <Background3D />
+      
+      {/* Time Validation Alert */}
+      <TimeValidationAlert 
+        isOpen={showTimeAlert}
+        onClose={() => setShowTimeAlert(false)}
+        selectedDate={selectedDate}
+        selectedTime={selectedTime}
+      />
       
       <div className="relative z-10">
         {/* Navigation Header */}
