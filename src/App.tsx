@@ -8,8 +8,8 @@ import NotFound from "./pages/NotFound";
 
 
 // 🔹 Auth Pages
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 const queryClient = new QueryClient();
 

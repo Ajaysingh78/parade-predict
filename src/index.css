@@ -1,169 +1,145 @@
+/* Import Google Fonts first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Premium Weather Platform Design System - Netflix Quality UI */
+:root {
+  /* Core Brand Colors */
+  --background: 210 20% 6%;
+  --foreground: 210 40% 98%;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+  /* Glass-morphism & Cards */
+  --card: 210 20% 8%;
+  --card-foreground: 210 40% 98%;
+  --glass: 210 20% 12%;
+  --glass-foreground: 210 40% 95%;
 
-@layer base {
-  :root {
-    /* Core Brand Colors */
-    --background: 210 20% 6%;
-    --foreground: 210 40% 98%;
+  /* Popover & Overlays */
+  --popover: 210 20% 8%;
+  --popover-foreground: 210 40% 98%;
 
-    /* Glass-morphism & Cards */
-    --card: 210 20% 8%;
-    --card-foreground: 210 40% 98%;
-    --glass: 210 20% 12%;
-    --glass-foreground: 210 40% 95%;
+  /* Premium Color Palette */
+  --primary: 174 77% 34%;
+  --primary-foreground: 210 40% 98%;
+  --primary-glow: 174 77% 45%;
 
-    /* Popover & Overlays */
-    --popover: 210 20% 8%;
-    --popover-foreground: 210 40% 98%;
+  --secondary: 25 89% 62%;
+  --secondary-foreground: 210 20% 6%;
+  --secondary-glow: 25 89% 72%;
 
-    /* Premium Color Palette */
-    --primary: 174 77% 34%; /* Teal #0ea5a4 */
-    --primary-foreground: 210 40% 98%;
-    --primary-glow: 174 77% 45%;
+  --tertiary: 217 91% 60%;
+  --tertiary-foreground: 210 40% 98%;
+  --tertiary-glow: 217 91% 70%;
 
-    --secondary: 25 89% 62%; /* Saffron #fb923c */
-    --secondary-foreground: 210 20% 6%;
-    --secondary-glow: 25 89% 72%;
+  /* Status Colors */
+  --success: 142 76% 36%;
+  --success-foreground: 210 40% 98%;
+  --warning: 43 96% 56%;
+  --warning-foreground: 210 20% 6%;
+  --danger: 0 84% 60%;
+  --danger-foreground: 210 40% 98%;
 
-    --tertiary: 217 91% 60%; /* Royal Blue #2563eb */
-    --tertiary-foreground: 210 40% 98%;
-    --tertiary-glow: 217 91% 70%;
+  /* Comfort Score Colors */
+  --comfort-perfect: 142 76% 36%;
+  --comfort-good: 43 96% 56%;
+  --comfort-poor: 0 84% 60%;
 
-    /* Status Colors */
-    --success: 142 76% 36%;
-    --success-foreground: 210 40% 98%;
-    --warning: 43 96% 56%;
-    --warning-foreground: 210 20% 6%;
-    --danger: 0 84% 60%;
-    --danger-foreground: 210 40% 98%;
+  /* UI Elements */
+  --muted: 210 20% 12%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 210 20% 15%;
+  --accent-foreground: 210 40% 98%;
 
-    /* Comfort Score Colors */
-    --comfort-perfect: 142 76% 36%; /* Green */
-    --comfort-good: 43 96% 56%; /* Amber */
-    --comfort-poor: 0 84% 60%; /* Red */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
 
-    /* UI Elements */
-    --muted: 210 20% 12%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 210 20% 15%;
-    --accent-foreground: 210 40% 98%;
+  --border: 210 20% 18%;
+  --input: 210 20% 15%;
+  --ring: 174 77% 34%;
+  --radius: 1rem;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--primary)) 50%, hsl(var(--tertiary)) 100%);
+  --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+  --gradient-glass: linear-gradient(145deg, hsla(var(--glass), 0.8) 0%, hsla(var(--muted), 0.6) 100%);
+  --gradient-comfort-perfect: linear-gradient(135deg, hsl(var(--success)) 0%, hsl(142 76% 45%) 100%);
+  --gradient-comfort-good: linear-gradient(135deg, hsl(var(--warning)) 0%, hsl(43 96% 65%) 100%);
+  --gradient-comfort-poor: linear-gradient(135deg, hsl(var(--danger)) 0%, hsl(0 84% 70%) 100%);
 
-    --border: 210 20% 18%;
-    --input: 210 20% 15%;
-    --ring: 174 77% 34%;
+  /* Shadows & Effects */
+  --shadow-elegant: 0 25px 50px -12px hsla(var(--background), 0.5);
+  --shadow-glow-primary: 0 0 40px hsla(var(--primary-glow), 0.3);
+  --shadow-glow-secondary: 0 0 40px hsla(var(--secondary-glow), 0.3);
+  --shadow-card: 0 20px 25px -5px hsla(var(--background), 0.3);
+  --shadow-premium: 0 35px 60px -15px hsla(var(--background), 0.4);
 
-    --radius: 1rem;
+  /* Animations */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --animation-float: float 6s ease-in-out infinite;
+  --animation-pulse-glow: pulse-glow 2s ease-in-out infinite alternate;
 
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--primary)) 50%, hsl(var(--tertiary)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
-    --gradient-glass: linear-gradient(145deg, hsla(var(--glass), 0.8) 0%, hsla(var(--muted), 0.6) 100%);
-    --gradient-comfort-perfect: linear-gradient(135deg, hsl(var(--success)) 0%, hsl(142 76% 45%) 100%);
-    --gradient-comfort-good: linear-gradient(135deg, hsl(var(--warning)) 0%, hsl(43 96% 65%) 100%);
-    --gradient-comfort-poor: linear-gradient(135deg, hsl(var(--danger)) 0%, hsl(0 84% 70%) 100%);
+  /* Typography Scale */
+  --font-heading: 'Poppins', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
 
-    /* Shadows & Effects */
-    --shadow-elegant: 0 25px 50px -12px hsla(var(--background), 0.5);
-    --shadow-glow-primary: 0 0 40px hsla(var(--primary-glow), 0.3);
-    --shadow-glow-secondary: 0 0 40px hsla(var(--secondary-glow), 0.3);
-    --shadow-card: 0 20px 25px -5px hsla(var(--background), 0.3);
-    --shadow-premium: 0 35px 60px -15px hsla(var(--background), 0.4);
-
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --animation-float: float 6s ease-in-out infinite;
-    --animation-pulse-glow: pulse-glow 2s ease-in-out infinite alternate;
-
-    /* Typography Scale */
-    --font-heading: 'Poppins', system-ui, sans-serif;
-    --font-body: 'Inter', system-ui, sans-serif;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+  /* Sidebar Variables */
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground font-body;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
-  }
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+  --sidebar-background: 240 5.9% 10%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 224.3 76.3% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 }
 
+/* Base Layer */
+@layer base {
+  * { @apply border-border; }
+
+  body { @apply bg-background text-foreground font-body; }
+
+  h1,h2,h3,h4,h5,h6 { @apply font-heading; }
+}
+
+/* Utilities Layer */
 @layer utilities {
   /* Hero Gradient Background */
-  .hero-gradient {
-    background: var(--gradient-hero);
-    animation: gradient-shift 8s ease-in-out infinite;
-  }
+  .hero-gradient { background: var(--gradient-hero); animation: gradient-shift 8s ease-in-out infinite; }
 
   /* Glass-morphism Effects */
   .glass-card {
@@ -181,186 +157,75 @@
   }
 
   /* Comfort Score Variants */
-  .comfort-perfect {
-    background: var(--gradient-comfort-perfect);
-    box-shadow: var(--shadow-glow-primary);
-  }
-
-  .comfort-good {
-    background: var(--gradient-comfort-good);
-    box-shadow: var(--shadow-glow-secondary);
-  }
-
-  .comfort-poor {
-    background: var(--gradient-comfort-poor);
-    box-shadow: 0 0 40px hsla(var(--danger), 0.3);
-  }
+  .comfort-perfect { background: var(--gradient-comfort-perfect); box-shadow: var(--shadow-glow-primary); }
+  .comfort-good { background: var(--gradient-comfort-good); box-shadow: var(--shadow-glow-secondary); }
+  .comfort-poor { background: var(--gradient-comfort-poor); box-shadow: 0 0 40px hsla(var(--danger), 0.3); }
 
   /* Interactive Elements */
-  .interactive-card {
-    transition: var(--transition-smooth);
-    transform-style: preserve-3d;
-  }
+  .interactive-card { transition: var(--transition-smooth); transform-style: preserve-3d; }
+  .interactive-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: var(--shadow-premium); }
 
-  .interactive-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: var(--shadow-premium);
-  }
-
-  .flip-card {
-    perspective: 1000px;
-  }
-
-  .flip-card-inner {
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-  }
-
-  .flip-card:hover .flip-card-inner {
-    transform: rotateY(180deg);
-  }
-
-  .flip-card-front,
-  .flip-card-back {
-    backface-visibility: hidden;
-  }
-
-  .flip-card-back {
-    transform: rotateY(180deg);
-  }
+  .flip-card { perspective: 1000px; }
+  .flip-card-inner { transition: transform 0.6s; transform-style: preserve-3d; }
+  .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+  .flip-card-front, .flip-card-back { backface-visibility: hidden; }
+  .flip-card-back { transform: rotateY(180deg); }
 
   /* Typography Utilities */
-  .gradient-text {
-    background: var(--gradient-hero);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .text-glow {
-    text-shadow: 0 0 20px hsla(var(--primary-glow), 0.5);
-  }
+  .gradient-text { background: var(--gradient-hero); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .text-glow { text-shadow: 0 0 20px hsla(var(--primary-glow), 0.5); }
 
   /* Animation Helpers */
-  .animate-float {
-    animation: var(--animation-float);
-  }
+  .animate-float { animation: var(--animation-float); }
+  .animate-pulse-glow { animation: var(--animation-pulse-glow); }
 
-  .animate-pulse-glow {
-    animation: var(--animation-pulse-glow);
-  }
-
-  /* NASA Space Animations */
-  .animate-satellite-orbit {
-    animation: satellite-orbit 15s linear infinite;
-  }
-
-  .animate-earth-rotate {
-    animation: earth-rotate 20s linear infinite;
-  }
-
-  .animate-star-twinkle {
-    animation: star-twinkle 3s ease-in-out infinite;
-  }
-
-  .animate-meteor-shower {
-    animation: meteor-shower 4s linear infinite;
-  }
-
-  .animate-data-stream {
-    animation: data-stream 2s ease-in-out infinite;
-  }
-
-  .animate-hologram-flicker {
-    animation: hologram-flicker 2s ease-in-out infinite;
-  }
-
-  .animate-matrix-rain {
-    animation: matrix-rain 5s linear infinite;
-  }
-
-  .animate-radar-sweep {
-    animation: radar-sweep 3s linear infinite;
-  }
-
-  .animate-slide-up-stagger {
-    animation: slide-up-stagger 0.8s ease-out forwards;
-  }
-
-  .animate-scale-in-3d {
-    animation: scale-in-3d 0.6s ease-out forwards;
-  }
+  /* NASA Animations */
+  .animate-satellite-orbit { animation: satellite-orbit 15s linear infinite; }
+  .animate-earth-rotate { animation: earth-rotate 20s linear infinite; }
+  .animate-star-twinkle { animation: star-twinkle 3s ease-in-out infinite; }
+  .animate-meteor-shower { animation: meteor-shower 4s linear infinite; }
+  .animate-data-stream { animation: data-stream 2s ease-in-out infinite; }
+  .animate-hologram-flicker { animation: hologram-flicker 2s ease-in-out infinite; }
+  .animate-matrix-rain { animation: matrix-rain 5s linear infinite; }
+  .animate-radar-sweep { animation: radar-sweep 3s linear infinite; }
+  .animate-slide-up-stagger { animation: slide-up-stagger 0.8s ease-out forwards; }
+  .animate-scale-in-3d { animation: scale-in-3d 0.6s ease-out forwards; }
 
   /* 3D Effects */
-  .transform-3d {
-    transform-style: preserve-3d;
-  }
-
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .perspective-2000 {
-    perspective: 2000px;
-  }
-
-  .rotate-y-15 {
-    transform: rotateY(15deg);
-  }
-
-  .rotate-x-15 {
-    transform: rotateX(15deg);
-  }
+  .transform-3d { transform-style: preserve-3d; }
+  .perspective-1000 { perspective: 1000px; }
+  .perspective-2000 { perspective: 2000px; }
+  .rotate-y-15 { transform: rotateY(15deg); }
+  .rotate-x-15 { transform: rotateX(15deg); }
 
   /* NASA Theme Elements */
   .space-card {
-    background: linear-gradient(145deg, 
-      hsla(var(--background), 0.9) 0%, 
-      hsla(var(--primary), 0.1) 50%, 
-      hsla(var(--tertiary), 0.1) 100%);
+    background: linear-gradient(145deg, hsla(var(--background), 0.9) 0%, hsla(var(--primary), 0.1) 50%, hsla(var(--tertiary), 0.1) 100%);
     backdrop-filter: blur(20px);
     border: 1px solid hsla(var(--primary), 0.3);
-    box-shadow: 
-      0 0 30px hsla(var(--primary), 0.2),
-      inset 0 1px 0 hsla(var(--foreground), 0.1);
+    box-shadow: 0 0 30px hsla(var(--primary), 0.2), inset 0 1px 0 hsla(var(--foreground), 0.1);
   }
 
-  .holographic-border {
-    position: relative;
-    overflow: hidden;
-  }
-
+  .holographic-border { position: relative; overflow: hidden; }
   .holographic-border::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-      transparent, 
-      hsla(var(--primary), 0.4), 
-      transparent);
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, hsla(var(--primary), 0.4), transparent);
     animation: hologram-flicker 3s linear infinite;
   }
 
   .nasa-grid {
-    background-image: 
-      linear-gradient(hsla(var(--primary), 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, hsla(var(--primary), 0.1) 1px, transparent 1px);
+    background-image: linear-gradient(hsla(var(--primary), 0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, hsla(var(--primary), 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
-  .orbital-container {
-    position: relative;
-    border-radius: 50%;
-    border: 2px dashed hsla(var(--primary), 0.3);
-  }
-
+  .orbital-container { position: relative; border-radius: 50%; border: 2px dashed hsla(var(--primary), 0.3); }
   .satellite-path {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 8px; height: 8px;
     background: hsl(var(--tertiary));
     border-radius: 50%;
     box-shadow: 0 0 10px hsl(var(--tertiary));
@@ -374,7 +239,6 @@
     box-shadow: var(--shadow-card);
     transition: var(--transition-smooth);
   }
-
   .btn-hero:hover {
     background: hsla(var(--primary), 0.2);
     box-shadow: var(--shadow-glow-primary);
@@ -382,203 +246,24 @@
   }
 }
 
+/* Components Layer */
 @layer components {
-  /* Circular Progress Ring */
-  .progress-ring {
-    transform: rotate(-90deg);
-  }
-
-  .progress-ring circle {
-    transition: stroke-dashoffset 1s ease-in-out;
-  }
+  .progress-ring { transform: rotate(-90deg); }
+  .progress-ring circle { transition: stroke-dashoffset 1s ease-in-out; }
 }
 
-/* NASA-Inspired Keyframe Animations */
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-15px) rotate(120deg);
-  }
-  66% {
-    transform: translateY(-10px) rotate(240deg);
-  }
-}
-
-@keyframes pulse-glow {
-  0% {
-    box-shadow: 0 0 20px hsla(var(--primary-glow), 0.4);
-  }
-  100% {
-    box-shadow: 0 0 40px hsla(var(--primary-glow), 0.8);
-  }
-}
-
-@keyframes bounce-in {
-  0% {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* NASA Space-Themed Animations */
-@keyframes satellite-orbit {
-  0% { 
-    transform: rotate(0deg) translateX(120px) rotate(0deg);
-    opacity: 0.6;
-  }
-  25% { 
-    opacity: 1;
-  }
-  50% { 
-    opacity: 0.8;
-  }
-  75% { 
-    opacity: 1;
-  }
-  100% { 
-    transform: rotate(360deg) translateX(120px) rotate(-360deg);
-    opacity: 0.6;
-  }
-}
-
-@keyframes earth-rotate {
-  from { 
-    transform: rotate(0deg);
-  }
-  to { 
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes star-twinkle {
-  0%, 100% { 
-    opacity: 0.3; 
-    transform: scale(1);
-  }
-  50% { 
-    opacity: 1; 
-    transform: scale(1.5);
-  }
-}
-
-@keyframes meteor-shower {
-  0% { 
-    transform: translateX(-200px) translateY(-200px) rotate(45deg);
-    opacity: 0;
-  }
-  10% { 
-    opacity: 1;
-  }
-  90% { 
-    opacity: 1;
-  }
-  100% { 
-    transform: translateX(200px) translateY(200px) rotate(45deg);
-    opacity: 0;
-  }
-}
-
-@keyframes data-stream {
-  0% { 
-    transform: translateY(100px) scaleY(0);
-    opacity: 0;
-  }
-  50% { 
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-  100% { 
-    transform: translateY(-100px) scaleY(0);
-    opacity: 0;
-  }
-}
-
-@keyframes hologram-flicker {
-  0%, 100% { 
-    opacity: 0.8; 
-    filter: hue-rotate(0deg) brightness(1);
-  }
-  25% { 
-    opacity: 0.9; 
-    filter: hue-rotate(90deg) brightness(1.1);
-  }
-  50% { 
-    opacity: 1; 
-    filter: hue-rotate(180deg) brightness(1.2);
-  }
-  75% { 
-    opacity: 0.9; 
-    filter: hue-rotate(270deg) brightness(1.1);
-  }
-}
-
-@keyframes matrix-rain {
-  0% {
-    transform: translateY(-100vh);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh);
-    opacity: 0;
-  }
-}
-
-@keyframes radar-sweep {
-  0% {
-    transform: rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(360deg);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-up-stagger {
-  from { 
-    opacity: 0; 
-    transform: translateY(50px);
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0);
-  }
-}
-
-@keyframes scale-in-3d {
-  from { 
-    opacity: 0; 
-    transform: scale3d(0.8, 0.8, 0.8) rotateY(-45deg);
-  }
-  to { 
-    opacity: 1; 
-    transform: scale3d(1, 1, 1) rotateY(0deg);
-  }
-}
+/* Keyframes */
+@keyframes gradient-shift { 0%,100%{background-position:0% 50%}50%{background-position:100% 50%} }
+@keyframes float {0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-15px) rotate(120deg)}66%{transform:translateY(-10px) rotate(240deg)}}
+@keyframes pulse-glow {0%{box-shadow:0 0 20px hsla(var(--primary-glow),0.4)}100%{box-shadow:0 0 40px hsla(var(--primary-glow),0.8)}}
+@keyframes bounce-in {0%{transform:scale(0.3);opacity:0}50%{transform:scale(1.05)}70%{transform:scale(0.9)}100%{transform:scale(1);opacity:1}}
+@keyframes satellite-orbit {0%{transform:rotate(0deg) translateX(120px) rotate(0deg);opacity:0.6}25%{opacity:1}50%{opacity:0.8}75%{opacity:1}100%{transform:rotate(360deg) translateX(120px) rotate(-360deg);opacity:0.6}}
+@keyframes earth-rotate {from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes star-twinkle {0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+@keyframes meteor-shower {0%{transform:translateX(-200px) translateY(-200px) rotate(45deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(200px) translateY(200px) rotate(45deg);opacity:0}}
+@keyframes data-stream {0%{transform:translateY(100px) scaleY(0);opacity:0}50%{transform:translateY(0) scaleY(1);opacity:1}100%{transform:translateY(-100px) scaleY(0);opacity:0}}
+@keyframes hologram-flicker {0%,100%{opacity:0.8;filter:hue-rotate(0deg) brightness(1)}25%{opacity:0.9;filter:hue-rotate(90deg) brightness(1.1)}50%{opacity:1;filter:hue-rotate(180deg) brightness(1.2)}75%{opacity:0.9;filter:hue-rotate(270deg) brightness(1.1)}}
+@keyframes matrix-rain {0%{transform:translateY(-100vh);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(100vh);opacity:0}}
+@keyframes radar-sweep {0%{transform:rotate(0deg);opacity:1}100%{transform:rotate(360deg);opacity:1}}
+@keyframes slide-up-stagger {from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scale-in-3d {from{opacity:0;transform:scale3d(0.8,0.8,0.8) rotateY(-45deg)}to{opacity:1;transform:scale3d(1,1,1) rotateY(0deg)}}

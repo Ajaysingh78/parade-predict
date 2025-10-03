@@ -20,7 +20,9 @@ import {
   LogIn,
   UserPlus,
   LogOut,
-  AlertCircle
+  AlertCircle,
+  Calendar,
+  Clock
 } from 'lucide-react';
 import CircularProgress from '@/components/CircularProgress';
 import WeatherRiskCard from '@/components/WeatherRiskCard';
@@ -28,34 +30,42 @@ import EventProfileSelector from '@/components/EventProfileSelector';
 import LocationSearchInput from '@/components/LocationSearchInput';
 import DateTimePicker from '@/components/DateTimePicker';
 import Background3D from "@/components/Background3D";
+import Navbar from '@/components/Navbar';
+import Login from "@/components/Login";
+import Signup from '@/components/Signup';
+import Footer from '@/components/footer';
+import Chatbot from '@/components/Chatbot';
+import About from '@/components/About';
+import Explore from '@/components/Explore';
+type TimeSlot = 'morning' | 'afternoon' | 'evening';
+import DemoWrapper from '@/components/WeatherDashboard';
+import WeathrDashboard from '@/components/WeatherDashboard';
 
 // Time validation utility
-const isTimeSlotInPast = (selectedDate, timeSlot) => {
+const isTimeSlotInPast = (selectedDate: string, timeSlot: TimeSlot): boolean => {
   const today = new Date();
   const selected = new Date(selectedDate);
-  
-  // If selected date is before today, it's definitely in the past
+
   if (selected.toDateString() !== today.toDateString()) {
     return selected < today;
   }
-  
-  // If it's today, check the time slot
+
   const currentHour = today.getHours();
-  
+
   switch (timeSlot) {
     case 'morning':
-      return currentHour >= 12; // Past morning if it's afternoon or evening
+      return currentHour >= 12;
     case 'afternoon':
-      return currentHour >= 18; // Past afternoon if it's evening
+      return currentHour >= 18;
     case 'evening':
-      return currentHour >= 23; // Past evening if it's late night
+      return currentHour >= 23;
     default:
       return false;
   }
 };
 
 // Time slot display utility
-const getTimeSlotDisplay = (timeSlot) => {
+const getTimeSlotDisplay = (timeSlot: TimeSlot): string => {
   const slots = {
     morning: '6:00 AM - 12:00 PM',
     afternoon: '12:00 PM - 6:00 PM',
@@ -64,227 +74,21 @@ const getTimeSlotDisplay = (timeSlot) => {
   return slots[timeSlot] || timeSlot;
 };
 
-// Login Component
-const Login = ({ onLogin, onSwitchToSignup, onBack }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      alert("Email & Password required");
-      return;
-    }
-    setLoading(true);
-    
-    // Simulate login process
-    setTimeout(() => {
-      setLoading(false);
-      onLogin(email);
-      alert("Login successful!");
-    }, 1000);
-  };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center relative">
-      <Background3D />
-      
-      <div className="relative z-10 glass-morphism p-8 md:p-10 rounded-3xl shadow-2xl w-full max-w-md mx-4 backdrop-blur-xl border border-blue-400/30 bg-black/30">
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Satellite className="w-8 h-8 text-blue-400" />
-            <h2 className="text-2xl md:text-3xl font-bold text-white">Mission Login</h2>
-          </div>
-          <p className="text-blue-200 text-sm">Access NASA Weather System</p>
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">Email</label>
-            <input
-              type="email"
-              placeholder="astronaut@nasa.gov"
-              className="w-full px-4 py-3 rounded-xl border-2 border-blue-400/50 bg-white/10 backdrop-blur-sm focus:border-blue-400 focus:ring focus:ring-blue-400/30 transition-all text-white placeholder-blue-200"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl border-2 border-blue-400/50 bg-white/10 backdrop-blur-sm focus:border-blue-400 focus:ring focus:ring-blue-400/30 transition-all text-white placeholder-blue-200"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full py-4 text-lg font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300 rounded-xl"
-            disabled={loading}
-          >
-            {loading ? (
-              <div className="flex items-center gap-2">
-                <Satellite className="w-5 h-5 animate-spin" />
-                Authenticating...
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <LogIn className="w-5 h-5" />
-                Launch Mission
-              </div>
-            )}
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center space-y-4">
-          <p className="text-sm text-blue-200">
-            New to the mission?{' '}
-            <button 
-              onClick={onSwitchToSignup}
-              className="text-blue-400 font-semibold hover:text-blue-300 transition-colors"
-            >
-              Join the crew
-            </button>
-          </p>
-          
-          <button 
-            onClick={onBack}
-            className="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-2 mx-auto"
-          >
-            ← Back to Mission Control
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Signup Component
-const Signup = ({ onSignup, onSwitchToLogin, onBack }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    if (!email || !password || !confirmPassword) {
-      alert("All fields required");
-      return;
-    }
-    if (password !== confirmPassword) {
-      alert("Passwords don't match");
-      return;
-    }
-    setLoading(true);
-    
-    // Simulate signup process
-    setTimeout(() => {
-      setLoading(false);
-      onSignup(email);
-      alert("Account created successfully!");
-    }, 1000);
-  };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center relative">
-      <Background3D />
-      
-      <div className="relative z-10 glass-morphism p-8 md:p-10 rounded-3xl shadow-2xl w-full max-w-md mx-4 backdrop-blur-xl border border-blue-400/30 bg-black/30">
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <UserPlus className="w-8 h-8 text-purple-400" />
-            <h2 className="text-2xl md:text-3xl font-bold text-white">Join Mission</h2>
-          </div>
-          <p className="text-purple-200 text-sm">Register for NASA Weather System</p>
-        </div>
-
-        <form onSubmit={handleSignup} className="space-y-6">
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">Email</label>
-            <input
-              type="email"
-              placeholder="astronaut@nasa.gov"
-              className="w-full px-4 py-3 rounded-xl border-2 border-purple-400/50 bg-white/10 backdrop-blur-sm focus:border-purple-400 focus:ring focus:ring-purple-400/30 transition-all text-white placeholder-purple-200"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl border-2 border-purple-400/50 bg-white/10 backdrop-blur-sm focus:border-purple-400 focus:ring focus:ring-purple-400/30 transition-all text-white placeholder-purple-200"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">Confirm Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl border-2 border-purple-400/50 bg-white/10 backdrop-blur-sm focus:border-purple-400 focus:ring focus:ring-purple-400/30 transition-all text-white placeholder-purple-200"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full py-4 text-lg font-semibold bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white shadow-2xl hover:shadow-purple-500/50 hover:scale-105 transition-all duration-300 rounded-xl"
-            disabled={loading}
-          >
-            {loading ? (
-              <div className="flex items-center gap-2">
-                <Satellite className="w-5 h-5 animate-spin" />
-                Creating Account...
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <UserPlus className="w-5 h-5" />
-                Join the Mission
-              </div>
-            )}
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center space-y-4">
-          <p className="text-sm text-purple-200">
-            Already part of the crew?{' '}
-            <button 
-              onClick={onSwitchToLogin}
-              className="text-purple-400 font-semibold hover:text-purple-300 transition-colors"
-            >
-              Login here
-            </button>
-          </p>
-          
-          <button 
-            onClick={onBack}
-            className="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-2 mx-auto"
-          >
-            ← Back to Mission Control
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 // Time Validation Alert Modal
-const TimeValidationAlert = ({ isOpen, onClose, selectedDate, selectedTime }) => {
+const TimeValidationAlert = ({
+  isOpen,
+  onClose,
+  selectedDate,
+  selectedTime
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedDate: string;
+  selectedTime: TimeSlot;
+}) => {
   if (!isOpen) return null;
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
       weekday: 'long',
       year: 'numeric',
@@ -300,7 +104,7 @@ const TimeValidationAlert = ({ isOpen, onClose, selectedDate, selectedTime }) =>
           <div className="flex justify-center">
             <AlertCircle className="w-16 h-16 text-red-400" />
           </div>
-          
+
           <div className="space-y-2">
             <h3 className="text-xl font-bold text-white">Time Slot Unavailable</h3>
             <p className="text-red-200 text-sm">
@@ -340,18 +144,265 @@ const TimeValidationAlert = ({ isOpen, onClose, selectedDate, selectedTime }) =>
   );
 };
 
-// Main App Component with Routing
+// Enhanced Control Panel Component
+const EnhancedControlPanel = ({
+  location,
+  setLocation,
+  selectedDate,
+  setSelectedDate,
+  selectedTime,
+  setSelectedTime,
+  selectedProfile,
+  setSelectedProfile,
+  onAnalyze
+}: {
+  location: string;
+  setLocation: (value: string) => void;
+  selectedDate: string;
+  setSelectedDate: (value: string) => void;
+  selectedTime: TimeSlot;
+  setSelectedTime: (value: TimeSlot) => void;
+  selectedProfile: any;
+  setSelectedProfile: (value: any) => void;
+  onAnalyze: () => void;
+}) => {
+  return (
+    <div className="w-full max-w-7xl mx-auto px-4">
+      <div className="glass-morphism rounded-3xl overflow-hidden border border-blue-400/30 bg-gradient-to-br from-black/50 via-blue-950/30 to-purple-950/30 backdrop-blur-xl shadow-2xl">
+
+        {/* Header Section */}
+        <div className="bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 border-b border-blue-400/30 px-6 md:px-10 py-6">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-75 animate-pulse"></div>
+                <div className="relative bg-gradient-to-br from-blue-600 to-purple-600 p-3 rounded-xl">
+                  <Satellite className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold text-white">Mission Control Panel</h2>
+                <p className="text-blue-200 text-xs md:text-sm font-mono">NASA Weather Intelligence System</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2 bg-green-500/20 px-3 py-1.5 rounded-full border border-green-400/30">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-green-300">ONLINE</span>
+              </div>
+              <div className="flex items-center gap-2 bg-blue-500/20 px-3 py-1.5 rounded-full border border-blue-400/30">
+                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <span className="text-blue-300">LIVE DATA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="p-6 md:p-10">
+          <div className="grid lg:grid-cols-2 gap-8">
+
+            {/* Left Column - Input Fields */}
+            <div className="space-y-6">
+
+              {/* Location Input */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 text-white font-semibold text-sm md:text-base">
+                    <MapPin className="w-5 h-5 text-blue-400" />
+                    Mission Location
+                  </label>
+                  <span className="text-xs font-mono bg-blue-500/20 text-blue-300 px-2 py-1 rounded-md border border-blue-400/30">
+                    GPS COORDINATES
+                  </span>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl opacity-0 group-hover:opacity-20 blur transition duration-300"></div>
+                  <LocationSearchInput
+                    value={location}
+                    onChange={setLocation}
+                    onLocationSelect={setLocation}
+                    className="relative w-full px-4 py-3.5 rounded-xl border-2 border-blue-400/50 bg-white/10 backdrop-blur-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30 transition-all text-white placeholder-blue-200 text-sm md:text-base"
+                  />
+                </div>
+                <p className="text-xs text-blue-200/80 ml-1">Enter city, state, or coordinates for weather analysis</p>
+              </div>
+
+              {/* Date & Time Section */}
+              <div className="grid sm:grid-cols-2 gap-4">
+
+                {/* Date Picker */}
+                <div className="space-y-3">
+                  <label className="flex items-center gap-2 text-white font-semibold text-sm md:text-base">
+                    <Calendar className="w-5 h-5 text-purple-400" />
+                    Mission Date
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl opacity-0 group-hover:opacity-20 blur transition duration-300"></div>
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      min={new Date().toISOString().split('T')[0]}
+                      className="relative w-full px-4 py-3.5 rounded-xl border-2 border-purple-400/50 bg-white/10 backdrop-blur-sm focus:border-purple-400 focus:ring-2 focus:ring-purple-400/30 transition-all text-white text-sm md:text-base [color-scheme:dark]"
+                    />
+                  </div>
+                </div>
+
+                {/* Time Picker */}
+                <div className="space-y-3">
+                  <label className="flex items-center gap-2 text-white font-semibold text-sm md:text-base">
+                    <Clock className="w-5 h-5 text-pink-400" />
+                    Time Slot
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-20 blur transition duration-300"></div>
+                    <select
+                      value={selectedTime}
+                      onChange={(e) => setSelectedTime(e.target.value as TimeSlot)}
+                      className="relative w-full px-4 py-3.5 rounded-xl border-2 border-pink-400/50 bg-white/10 backdrop-blur-sm focus:border-pink-400 focus:ring-2 focus:ring-pink-400/30 transition-all text-white text-sm md:text-base appearance-none cursor-pointer"
+                    >
+                      <option value="morning" className="bg-gray-900 text-white">Morning (6AM-12PM)</option>
+                      <option value="afternoon" className="bg-gray-900 text-white">Afternoon (12PM-6PM)</option>
+                      <option value="evening" className="bg-gray-900 text-white">Evening (6PM-11PM)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Event Profile Section */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 text-white font-semibold text-sm md:text-base">
+                    <Star className="w-5 h-5 text-yellow-400" />
+                    Event Profile
+                  </label>
+                  <span className="text-xs font-mono bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-md border border-yellow-400/30">
+                    MISSION TYPE
+                  </span>
+                </div>
+
+                <EventProfileSelector
+                  selectedProfile={selectedProfile}
+                  onProfileSelect={setSelectedProfile}
+                />
+                <p className="text-xs text-yellow-200/80 ml-1">Select event type for customized weather analysis</p>
+              </div>
+
+            </div>
+
+            {/* Right Column - Analysis Button & Info */}
+            <div className="flex flex-col justify-between space-y-6">
+
+              {/* Info Cards */}
+              <div className="space-y-4">
+                <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl p-5 border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-blue-500/20 p-2 rounded-lg">
+                      <Activity className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-white font-semibold text-sm mb-1">Real-Time Analysis</h3>
+                      <p className="text-blue-100 text-xs leading-relaxed">
+                        Our AI analyzes live NASA satellite data including temperature, humidity, wind patterns, and precipitation probability.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-5 border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-purple-500/20 p-2 rounded-lg">
+                      <Satellite className="w-5 h-5 text-purple-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-white font-semibold text-sm mb-1">NASA Data Sources</h3>
+                      <p className="text-purple-100 text-xs leading-relaxed">
+                        Powered by MODIS, POWER API, Terra & Aqua satellites for accurate meteorological forecasting.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-pink-500/10 to-blue-500/10 rounded-xl p-5 border border-pink-400/30 hover:border-pink-400/50 transition-all duration-300">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-pink-500/20 p-2 rounded-lg">
+                      <Zap className="w-5 h-5 text-pink-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-white font-semibold text-sm mb-1">Instant Results</h3>
+                      <p className="text-pink-100 text-xs leading-relaxed">
+                        Get comprehensive weather comfort scores and risk assessments in under 2 seconds.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Analysis Button */}
+              <div className="space-y-3">
+                <Button
+                  onClick={onAnalyze}
+                  className="w-full text-lg font-bold py-6 md:py-7 rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-2xl hover:shadow-blue-500/50 hover:scale-[1.02] transition-all duration-300 border-2 border-blue-400/50 relative overflow-hidden group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative flex items-center justify-center gap-3">
+                    <Satellite className="w-6 h-6 animate-spin" />
+                    <span>START WEATHER ANALYSIS</span>
+                    <Zap className="w-6 h-6" />
+                  </div>
+                </Button>
+
+                <div className="flex items-center justify-center gap-4 text-xs font-mono">
+                  <span className="text-green-400">✓ Secure</span>
+                  <span className="text-blue-400">✓ Fast</span>
+                  <span className="text-purple-400">✓ Accurate</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Footer Stats */}
+        <div className="bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-pink-600/10 border-t border-blue-400/30 px-6 md:px-10 py-4">
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-xl md:text-2xl font-bold text-blue-400">10K+</div>
+              <div className="text-xs text-blue-200/80">Analyses Done</div>
+            </div>
+            <div>
+              <div className="text-xl md:text-2xl font-bold text-purple-400">99.9%</div>
+              <div className="text-xs text-purple-200/80">Accuracy Rate</div>
+            </div>
+            <div>
+              <div className="text-xl md:text-2xl font-bold text-pink-400">&lt;2s</div>
+              <div className="text-xs text-pink-200/80">Response Time</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+
+// Main App Component
 const Index = () => {
-  const [currentPage, setCurrentPage] = useState('home'); // 'home', 'login', 'signup'
-  const [user, setUser] = useState(null);
+  const [currentPage, setCurrentPage] = useState('home');
+  const [user, setUser] = useState<string | null>(null);
   const [location, setLocation] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [selectedTime, setSelectedTime] = useState('morning');
+  const [selectedTime, setSelectedTime] = useState<TimeSlot>('morning');
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [comfortScore, setComfortScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
-  const [demoMode, setDemoMode] = useState(null);
+  const [demoMode, setDemoMode] = useState<string | null>(null);
   const [showTimeAlert, setShowTimeAlert] = useState(false);
+
 
   // Demo scenarios
   const demoScenarios = {
@@ -371,7 +422,6 @@ const Index = () => {
       description: 'Monsoon Analysis - Tropical Storm Monitoring Required'
     }
   };
-  
 
   // Weather risks
   const weatherRisks = [
@@ -414,7 +464,7 @@ const Index = () => {
 
   useEffect(() => {
     if (demoMode) {
-      const scenario = demoScenarios[demoMode];
+      const scenario = demoScenarios[demoMode as keyof typeof demoScenarios];
       setLocation(scenario.location);
       setComfortScore(scenario.score);
       setShowResults(true);
@@ -431,7 +481,6 @@ const Index = () => {
       return;
     }
 
-    // Validate time slot
     if (isTimeSlotInPast(selectedDate, selectedTime)) {
       setShowTimeAlert(true);
       return;
@@ -445,12 +494,12 @@ const Index = () => {
     }, 2000);
   };
 
-  const handleLogin = (email) => {
+  const handleLogin = (email: string) => {
     setUser(email);
     setCurrentPage('home');
   };
 
-  const handleSignup = (email) => {
+  const handleSignup = (email: string) => {
     setUser(email);
     setCurrentPage('home');
   };
@@ -460,10 +509,14 @@ const Index = () => {
     setCurrentPage('home');
   };
 
-  // Render different pages based on currentPage state
+  const handleNavigate = (page: string) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (currentPage === 'login') {
     return (
-      <Login 
+      <Login
         onLogin={handleLogin}
         onSwitchToSignup={() => setCurrentPage('signup')}
         onBack={() => setCurrentPage('home')}
@@ -473,80 +526,53 @@ const Index = () => {
 
   if (currentPage === 'signup') {
     return (
-      <Signup 
+      <Signup
         onSignup={handleSignup}
         onSwitchToLogin={() => setCurrentPage('login')}
         onBack={() => setCurrentPage('home')}
       />
     );
   }
+  if (currentPage === 'about') {
+    return (
+      <About onBack={() => setCurrentPage('home')} />
+    );
+  }
+  if (currentPage === 'explore') {
+    return (
+      <Explore onBack={() => setCurrentPage('home')} />
+    );
+  }
+  
 
-  // Main Home Page
   return (
     <div className="min-h-screen relative text-white overflow-x-hidden">
       <Background3D />
-      
-      {/* Time Validation Alert */}
-      <TimeValidationAlert 
+
+      <TimeValidationAlert
         isOpen={showTimeAlert}
         onClose={() => setShowTimeAlert(false)}
         selectedDate={selectedDate}
         selectedTime={selectedTime}
       />
-      
-      <div className="relative z-10">
-        {/* Navigation Header */}
-        <div className="absolute top-6 right-6 z-50 flex items-center gap-4">
-          {user ? (
-            <div className="flex items-center gap-4">
-              <div className="glass-morphism px-4 py-2 rounded-full border border-green-400/30 bg-green-500/20">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-green-400" />
-                  <span className="text-green-300 text-sm font-mono">{user}</span>
-                </div>
-              </div>
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                size="sm"
-                className="glass-morphism border-red-400/50 text-red-300 hover:bg-red-500/20"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => setCurrentPage('login')}
-                variant="outline"
-                size="sm"
-                className="glass-morphism border-blue-400/50 text-blue-300 hover:bg-blue-500/20"
-              >
-                <LogIn className="w-4 h-4 mr-2" />
-                Login
-              </Button>
-              <Button
-                onClick={() => setCurrentPage('signup')}
-                variant="outline"
-                size="sm"
-                className="glass-morphism border-purple-400/50 text-purple-300 hover:bg-purple-500/20"
-              >
-                <UserPlus className="w-4 h-4 mr-2" />
-                Sign Up
-              </Button>
-            </div>
-          )}
-        </div>
 
-        {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div className="relative z-10">
+        <Navbar
+          user={user}
+          onLoginClick={() => setCurrentPage('login')}
+          onSignupClick={() => setCurrentPage('signup')}
+          onLogout={handleLogout}
+          currentPage={currentPage}
+          onNavigate={handleNavigate}
+        />
+        
+
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-indigo-900/30" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
           </div>
 
-          {/* Floating elements */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden hidden md:block">
             <div className="nasa-orbital-element absolute top-1/4 left-1/4 w-16 h-16 flex items-center justify-center rounded-full bg-yellow-400/20 backdrop-blur-sm animate-float-glow">
               <Sun className="w-8 h-8 text-yellow-400" />
@@ -562,7 +588,6 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="relative z-10 container mx-auto px-4 text-center w-full">
             <div className="max-w-6xl mx-auto">
               <div className="mb-8 md:mb-16 animate-fade-in space-y-4 md:space-y-6">
@@ -573,13 +598,13 @@ const Index = () => {
                   </span>
                   <Satellite className="w-6 h-6 md:w-8 md:h-8 text-blue-400 animate-pulse" />
                 </div>
-                
+
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-heading font-bold mb-4 md:mb-6 leading-tight break-words">
                   <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-shift">
                     SkySure: AI Weather Comfort Prediction
                   </span>
                 </h1>
-                
+
                 <div className="space-y-3 md:space-y-4">
                   <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white break-words">
                     NASA-Grade Atmospheric Intelligence System
@@ -605,115 +630,22 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Control Panel */}
-              <div className="nasa-control-panel glass-morphism rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 mb-8 md:mb-12 max-w-6xl mx-auto shadow-2xl backdrop-blur-xl border border-blue-400/30 animate-scale-in bg-black/30">
-                <div className="grid lg:grid-cols-2 gap-6 md:gap-12 items-start">
-                  {/* Left Column */}
-                  <div className="space-y-6 md:space-y-8">
-                    <div className="space-y-3 md:space-y-4">
-                      <h3 className="text-lg md:text-xl font-heading font-bold flex items-center gap-2 md:gap-3 text-white flex-wrap">
-                        <MapPin className="w-5 h-5 md:w-6 md:h-6 text-blue-400 flex-shrink-0" />
-                        <span className="break-words">Mission Coordinates</span>
-                        <span className="text-xs font-mono bg-blue-500/20 px-2 py-1 rounded whitespace-nowrap">GPS</span>
-                      </h3>
-                      <LocationSearchInput
-                        value={location}
-                        onChange={setLocation}
-                        onLocationSelect={setLocation}
-                        className="w-full rounded-lg md:rounded-xl border-2 border-blue-400/50 bg-white/10 backdrop-blur-sm focus:border-blue-400 focus:ring focus:ring-blue-400/30 transition-all text-white placeholder-blue-200 text-sm md:text-base"
-                      />
-                    </div>
-
-                    <div className="space-y-3 md:space-y-4">
-                      <h3 className="text-lg md:text-xl font-heading font-bold flex items-center gap-2 md:gap-3 text-white flex-wrap">
-                        <Activity className="w-5 h-5 md:w-6 md:h-6 text-purple-400 flex-shrink-0" />
-                        <span className="break-words">Mission Timeline</span>
-                        <span className="text-xs font-mono bg-purple-500/20 px-2 py-1 rounded whitespace-nowrap">UTC</span>
-                      </h3>
-                      <DateTimePicker
-                        selectedDate={selectedDate}
-                        selectedTime={selectedTime}
-                        onDateChange={setSelectedDate}
-                        onTimeChange={setSelectedTime}
-                        className="rounded-lg md:rounded-xl border-2 border-purple-400/50 bg-white/10 backdrop-blur-sm focus:border-purple-400 focus:ring focus:ring-purple-400/30 transition-all"
-                      />
-                    </div>
-
-                    <div className="space-y-3 md:space-y-4">
-                      <h3 className="text-lg md:text-xl font-heading font-bold flex items-center gap-2 md:gap-3 text-white flex-wrap">
-                        <Star className="w-5 h-5 md:w-6 md:h-6 text-yellow-400 flex-shrink-0" />
-                        <span className="break-words">Mission Profile</span>
-                        <span className="text-xs font-mono bg-yellow-500/20 px-2 py-1 rounded whitespace-nowrap">CLASS</span>
-                      </h3>
-                      <EventProfileSelector
-                        selectedProfile={selectedProfile}
-                        onProfileSelect={setSelectedProfile}
-                      />
-                    </div>
-
-                    <Button
-                      onClick={handleCheckWeather}
-                      className="w-full text-base sm:text-lg md:text-xl font-bold py-4 md:py-6 rounded-xl md:rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 md:gap-3 border border-blue-400/50"
-                    >
-                      <Satellite className="w-5 h-5 md:w-6 md:h-6 animate-spin flex-shrink-0" />
-                      <span className="break-words text-center">INITIATE WEATHER ANALYSIS</span>
-                      <Zap className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
-                    </Button>
-                  </div>
-
-                  {/* Right Column */}
-                  <div className="flex flex-col items-center justify-center min-h-[300px] md:min-h-[500px] relative">
-                    {showResults ? (
-                      <div className="space-y-6 md:space-y-8 animate-fade-in text-center">
-                        <div className="relative">
-                          <CircularProgress score={comfortScore} animated size={120} className="md:hidden" />
-                          <CircularProgress score={comfortScore} animated size={160} className="hidden md:block" />
-                          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400/20 to-purple-400/20 -z-10 animate-pulse"></div>
-                        </div>
-
-                        {location && (
-                          <div className="text-center space-y-2 md:space-y-3">
-                            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-white mb-2 break-words px-2">
-                              {location}
-                            </div>
-                            <div className="text-blue-200 font-mono text-xs sm:text-sm md:text-base bg-blue-500/20 rounded-full px-3 md:px-4 py-2 inline-block break-words">
-                              {new Date(selectedDate).toLocaleDateString('en-IN', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                              })}
-                            </div>
-                            <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 text-xs font-mono mt-4">
-                              <span className="text-green-400 whitespace-nowrap">MISSION: GO</span>
-                              <span className="text-blue-400 whitespace-nowrap">WEATHER: ANALYZED</span>
-                              <span className="text-purple-400 whitespace-nowrap">STATUS: READY</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="text-center space-y-4 md:space-y-6">
-                        <div className="relative">
-                          <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full glass-morphism border-4 border-blue-400/30 flex items-center justify-center animate-pulse-glow">
-                            <Satellite className="w-16 h-16 md:w-20 md:h-20 text-blue-400 animate-spin-slow" />
-                          </div>
-                          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400/20 to-purple-400/20 animate-pulse -z-10"></div>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-white font-bold text-base md:text-lg break-words">Awaiting Mission Parameters</p>
-                          <p className="text-blue-200 text-xs md:text-sm font-mono break-words">NASA Satellite Network Standing By</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <EnhancedControlPanel
+                location={location}
+                setLocation={setLocation}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                selectedTime={selectedTime}
+                setSelectedTime={setSelectedTime}
+                selectedProfile={selectedProfile}
+                setSelectedProfile={setSelectedProfile}
+                onAnalyze={handleCheckWeather}
+              />
             </div>
           </div>
 
-          {/* Bottom indicators */}
-          <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs md:text-sm font-mono z-20 px-4">
+          <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs md:
+          text-sm font-mono z-20 px-4">
             <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 md:px-4 py-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span className="text-green-300 whitespace-nowrap">TERRA SATELLITE</span>
@@ -729,11 +661,10 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Weather Results Section */}
         {showResults && (
           <section className="py-12 md:py-24 bg-gradient-to-b from-transparent via-black/40 to-black/60 backdrop-blur-sm border-t border-blue-400/30 relative">
             <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
-            
+
             <div className="container mx-auto px-4 relative z-10">
               <div className="text-center mb-12 md:mb-16">
                 <div className="flex items-center justify-center gap-2 md:gap-3 mb-4">
@@ -743,19 +674,18 @@ const Index = () => {
                   </span>
                   <Satellite className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
                 </div>
-                
+
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-4 md:mb-6 break-words">
                   <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                     Mission Weather Assessment
                   </span>
                 </h2>
-                
+
                 <p className="text-base sm:text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed break-words px-2">
                   Real-time atmospheric analysis using NASA Earth Science Division satellites and advanced meteorological modeling
                 </p>
               </div>
 
-              {/* Risk Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-8 max-w-8xl mx-auto mb-12 md:mb-16">
                 {weatherRisks.map((risk, index) => (
                   <div
@@ -779,7 +709,6 @@ const Index = () => {
                 ))}
               </div>
 
-              {/* Mission Summary */}
               <div className="nasa-control-panel glass-morphism rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 backdrop-blur-xl border border-blue-400/30 max-w-4xl mx-auto bg-black/30">
                 <div className="text-center space-y-4 md:space-y-6">
                   <h3 className="text-xl md:text-2xl font-bold text-white flex items-center justify-center gap-2 md:gap-3 flex-wrap">
@@ -787,7 +716,7 @@ const Index = () => {
                     <span className="break-words">Mission Weather Summary</span>
                     <Activity className="w-5 h-5 md:w-6 md:h-6 text-green-400 flex-shrink-0" />
                   </h3>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
                     <div className="space-y-2">
                       <div className="text-2xl md:text-3xl font-bold text-blue-400">{comfortScore}%</div>
@@ -805,11 +734,11 @@ const Index = () => {
 
                   <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg md:rounded-xl p-3 md:p-4 border border-blue-400/30">
                     <p className="text-white font-medium text-sm md:text-base break-words leading-relaxed">
-                      {comfortScore >= 80 
+                      {comfortScore >= 80
                         ? "🚀 MISSION GO: Optimal atmospheric conditions for space event execution"
                         : comfortScore >= 60
-                        ? "⚠️ MISSION CAUTION: Acceptable conditions with recommended precautions"
-                        : "🛑 MISSION HOLD: Weather conditions require postponement or indoor alternatives"
+                          ? "⚠️ MISSION CAUTION: Acceptable conditions with recommended precautions"
+                          : "🛑 MISSION HOLD: Weather conditions require postponement or indoor alternatives"
                       }
                     </p>
                   </div>
@@ -818,118 +747,11 @@ const Index = () => {
             </div>
           </section>
         )}
+        {/* AI Chatbot - Add this before Footer */}
+        <Chatbot />
 
         {/* Footer */}
-        <footer className="bg-gray-900 border-t border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="py-12 lg:py-16">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                
-                <div className="lg:col-span-1">
-                  <div className="flex items-center space-x-2 mb-4">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">🚀</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white">NASA Earth Monitor</h3>
-                  </div>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                    Advanced Earth observation and climate monitoring system powered by NASA satellite data and machine learning.
-                  </p>
-                  <div className="flex space-x-4">
-                    <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                      <Github className="w-5 h-5" />
-                    </a>
-                    <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                      <ExternalLink className="w-5 h-5" />
-                    </a>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Product</h4>
-                  <ul className="space-y-3">
-                    <li><a href="#features" className="text-gray-400 hover:text-white transition-colors text-sm">Features</a></li>
-                    <li><a href="#data-sources" className="text-gray-400 hover:text-white transition-colors text-sm">Data Sources</a></li>
-                    <li><a href="#api" className="text-gray-400 hover:text-white transition-colors text-sm">API Access</a></li>
-                    <li><a href="#documentation" className="text-gray-400 hover:text-white transition-colors text-sm">Documentation</a></li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Resources</h4>
-                  <ul className="space-y-3">
-                    <li><a href="#about" className="text-gray-400 hover:text-white transition-colors text-sm">About Project</a></li>
-                    <li><a href="#methodology" className="text-gray-400 hover:text-white transition-colors text-sm">Methodology</a></li>
-                    <li><a href="#datasets" className="text-gray-400 hover:text-white transition-colors text-sm">Datasets Used</a></li>
-                    <li><a href="#contact" className="text-gray-400 hover:text-white transition-colors text-sm">Contact Team</a></li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">Partnership</h4>
-                  <div className="space-y-4">
-                    <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg p-4 border border-blue-800/30">
-                      <p className="text-blue-300 text-xs font-mono mb-2">NASA SPACE APPS 2025</p>
-                      <p className="text-white text-sm font-medium">Official Challenge Project</p>
-                    </div>
-                    <div className="text-xs text-gray-400 space-y-1">
-                      <p>• Earth Science Division</p>
-                      <p>• POWER API Integration</p>
-                      <p>• MODIS Satellite Data</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="py-8 border-t border-gray-800">
-              <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
-                <div className="text-center lg:text-left">
-                  <h3 className="text-white font-semibold text-lg mb-2">Explore the Project</h3>
-                  <p className="text-gray-400 text-sm">Check out our source code and NASA Space Apps Challenge entry</p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a 
-                    href="https://github.com/Ajaysingh78/parade-predict" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 border border-gray-700 hover:border-gray-600 rounded-lg text-white font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-                  >
-                    <Github className="w-5 h-5 mr-2" />
-                    View Source Code
-                  </a>
-                  <a 
-                    href="https://www.spaceappschallenge.org/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-lg text-white font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-                  >
-                    <ExternalLink className="w-5 h-5 mr-2" />
-                    NASA Space Apps
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="py-6 border-t border-gray-800">
-              <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
-                <div className="text-center lg:text-left">
-                  <p className="text-gray-400 text-sm">
-                    © 2025 NASA Earth Monitor. Built for NASA Space Apps Challenge.
-                  </p>
-                  <p className="text-gray-500 text-xs mt-1">
-                    Powered by NASA Earth Science Division • POWER API • MODIS Satellite Data
-                  </p>
-                </div>
-                <div className="flex items-center space-x-6 text-xs text-gray-400">
-                  <a href="#privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-                  <a href="#terms" className="hover:text-white transition-colors">Terms of Use</a>
-                  <a href="#data" className="hover:text-white transition-colors">Data Usage</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </div>
   );
