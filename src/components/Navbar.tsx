@@ -1,12 +1,26 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Rocket, Home, Compass, Info, Mail, LogIn, UserPlus, User, LogOut } from 'lucide-react';
+import { 
+  Menu, 
+  X, 
+  Rocket, 
+  Home, 
+  Compass, 
+  Info, 
+  Mail, 
+  LogIn, 
+  UserPlus, 
+  User, 
+  LogOut,
+  Calendar
+} from 'lucide-react';
 
 const Navbar = ({ user, onLoginClick, onSignupClick, onLogout, currentPage, onNavigate }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const navLinks = [
     { id: 'home', label: 'Home', icon: Home },
+    { id: 'taskmanager', label: 'Task Manager', icon: Calendar },
     { id: 'explore', label: 'Explore', icon: Compass },
     { id: 'about', label: 'About', icon: Info },
     { id: 'contact', label: 'Contact', icon: Mail },

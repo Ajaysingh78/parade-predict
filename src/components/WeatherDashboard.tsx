@@ -19,9 +19,31 @@ import {
   Shield,
   MapPin,
   Calendar,
-  Clock
+  Clock,
+  Cloud
 } from 'lucide-react';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart as RechartsPie, Pie, Cell, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { 
+  LineChart, 
+  Line, 
+  AreaChart, 
+  Area, 
+  BarChart, 
+  Bar, 
+  PieChart as RechartsPie, 
+  Pie, 
+  Cell, 
+  RadarChart, 
+  Radar, 
+  PolarGrid, 
+  PolarAngleAxis, 
+  PolarRadiusAxis, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from 'recharts';
 
 const WeatherDashboard = ({ 
   comfortScore = 75, 
@@ -110,8 +132,6 @@ const WeatherDashboard = ({
 
   const status = getStatus();
   const StatusIcon = status.icon;
-
-  const COLORS = ['#fbbf24', '#3b82f6', '#8b5cf6', '#06b6d4', '#ef4444'];
 
   return (
     <div className="w-full max-w-[1800px] mx-auto px-4 py-8">
@@ -459,6 +479,13 @@ const WeatherDashboard = ({
                       <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
                       <div>
                         <div className="text-green-400 font-semibold text-sm">GO FOR MISSION</div>
+                        <div className="text-gray-300 text-xs mt-1">All atmospheric parameters within optimal range for event execution.</div>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-blue-500/10 border border-blue-400/30 rounded-lg p-3">
+                      <CheckCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-blue-400 font-semibold text-sm">Excellent Visibility</div>
                         <div className="text-gray-300 text-xs mt-1">Clear skies expected with visibility exceeding 15km throughout mission window.</div>
                       </div>
                     </div>

@@ -22,6 +22,7 @@ import {
   LogOut,
   AlertCircle,
   Calendar,
+
   Clock
 } from 'lucide-react';
 import CircularProgress from '@/components/CircularProgress';
@@ -38,8 +39,9 @@ import Chatbot from '@/components/Chatbot';
 import About from '@/components/About';
 import Explore from '@/components/Explore';
 type TimeSlot = 'morning' | 'afternoon' | 'evening';
-import DemoWrapper from '@/components/WeatherDashboard';
-import WeathrDashboard from '@/components/WeatherDashboard';
+import WeatherDashboard from '@/components/WeatherDashboard';
+import TaskManager from '@/components/TaskManager';
+
 
 // Time validation utility
 const isTimeSlotInPast = (selectedDate: string, timeSlot: TimeSlot): boolean => {
@@ -402,6 +404,7 @@ const Index = () => {
   const [showResults, setShowResults] = useState(false);
   const [demoMode, setDemoMode] = useState<string | null>(null);
   const [showTimeAlert, setShowTimeAlert] = useState(false);
+  const [showTaskManager, setShowTaskManager] = useState(false);
 
 
   // Demo scenarios
@@ -514,6 +517,7 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Existing code...
   if (currentPage === 'login') {
     return (
       <Login
@@ -533,17 +537,32 @@ const Index = () => {
       />
     );
   }
+
   if (currentPage === 'about') {
     return (
       <About onBack={() => setCurrentPage('home')} />
     );
   }
+
   if (currentPage === 'explore') {
     return (
       <Explore onBack={() => setCurrentPage('home')} />
     );
   }
-  
+
+  // YE NEW SECTION ADD KARO
+ if (currentPage === 'taskmanager') {
+  return (
+    <TaskManager 
+      user={user || null}  // This ensures it's never undefined
+      onBack={() => setCurrentPage('home')}
+      onLogout={handleLogout}
+    />
+  );
+}
+
+  // Rest of the code continues...
+
 
   return (
     <div className="min-h-screen relative text-white overflow-x-hidden">
@@ -565,7 +584,7 @@ const Index = () => {
           currentPage={currentPage}
           onNavigate={handleNavigate}
         />
-        
+
 
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24">
           <div className="absolute inset-0 z-0">
@@ -661,91 +680,18 @@ const Index = () => {
           </div>
         </section>
 
+        // In your Index.tsx, import:
+
+
+        // Replace the showResults section with:
         {showResults && (
-          <section className="py-12 md:py-24 bg-gradient-to-b from-transparent via-black/40 to-black/60 backdrop-blur-sm border-t border-blue-400/30 relative">
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
-
-            <div className="container mx-auto px-4 relative z-10">
-              <div className="text-center mb-12 md:mb-16">
-                <div className="flex items-center justify-center gap-2 md:gap-3 mb-4">
-                  <Satellite className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
-                  <span className="text-blue-300 font-mono text-xs md:text-sm tracking-widest break-words text-center">
-                    SATELLITE TELEMETRY ANALYSIS
-                  </span>
-                  <Satellite className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
-                </div>
-
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-4 md:mb-6 break-words">
-                  <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                    Mission Weather Assessment
-                  </span>
-                </h2>
-
-                <p className="text-base sm:text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed break-words px-2">
-                  Real-time atmospheric analysis using NASA Earth Science Division satellites and advanced meteorological modeling
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-8 max-w-8xl mx-auto mb-12 md:mb-16">
-                {weatherRisks.map((risk, index) => (
-                  <div
-                    key={risk.title}
-                    className="animate-fade-in hover:scale-105 transition-all duration-500 group"
-                    style={{ animationDelay: `${index * 150}ms` }}
-                  >
-                    <div className="nasa-risk-card glass-morphism backdrop-blur-xl bg-gradient-to-b from-white/10 to-white/5 rounded-xl md:rounded-2xl p-4 md:p-6 border border-blue-400/30 hover:border-blue-400/60 transition-all duration-300">
-                      <WeatherRiskCard
-                        {...risk}
-                        className="bg-transparent"
-                      />
-                      <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-blue-400/20">
-                        <div className="flex items-center justify-between text-xs font-mono">
-                          <span className="text-blue-300 whitespace-nowrap">NASA-VERIFIED</span>
-                          <span className="text-green-400 whitespace-nowrap">REAL-TIME</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="nasa-control-panel glass-morphism rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 backdrop-blur-xl border border-blue-400/30 max-w-4xl mx-auto bg-black/30">
-                <div className="text-center space-y-4 md:space-y-6">
-                  <h3 className="text-xl md:text-2xl font-bold text-white flex items-center justify-center gap-2 md:gap-3 flex-wrap">
-                    <Activity className="w-5 h-5 md:w-6 md:h-6 text-green-400 flex-shrink-0" />
-                    <span className="break-words">Mission Weather Summary</span>
-                    <Activity className="w-5 h-5 md:w-6 md:h-6 text-green-400 flex-shrink-0" />
-                  </h3>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                    <div className="space-y-2">
-                      <div className="text-2xl md:text-3xl font-bold text-blue-400">{comfortScore}%</div>
-                      <div className="text-xs md:text-sm text-blue-200 break-words">Mission Readiness</div>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-2xl md:text-3xl font-bold text-green-400">A+</div>
-                      <div className="text-xs md:text-sm text-green-200 break-words">NASA Data Grade</div>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-2xl md:text-3xl font-bold text-purple-400">0.8s</div>
-                      <div className="text-xs md:text-sm text-purple-200 break-words">Analysis Time</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg md:rounded-xl p-3 md:p-4 border border-blue-400/30">
-                    <p className="text-white font-medium text-sm md:text-base break-words leading-relaxed">
-                      {comfortScore >= 80
-                        ? "🚀 MISSION GO: Optimal atmospheric conditions for space event execution"
-                        : comfortScore >= 60
-                          ? "⚠️ MISSION CAUTION: Acceptable conditions with recommended precautions"
-                          : "🛑 MISSION HOLD: Weather conditions require postponement or indoor alternatives"
-                      }
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <WeatherDashboard
+            comfortScore={comfortScore}
+            location={location}
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            selectedProfile={selectedProfile}
+          />
         )}
         {/* AI Chatbot - Add this before Footer */}
         <Chatbot />
